@@ -34,10 +34,10 @@ terraform destroy # type yes
 terraform apply   # recreate — Destroy and Rebuild principle
 
 # 4. Commit (NOT tfvars or tfstate)
-git add terraform/week6/main.tf
-git add terraform/week6/variables.tf
-git add terraform/week6/outputs.tf
-git add terraform/week6/.terraform.lock.hcl
+git add terraform/app/main.tf
+git add terraform/app/variables.tf
+git add terraform/app/outputs.tf
+git add terraform/app/.terraform.lock.hcl
 git commit -m "Week 1: GCS buckets — tfstate + logs"
 git push origin main
 ```
@@ -73,5 +73,3 @@ This repository is Capstone
 -
 
 -
-
-## Fun Fact
