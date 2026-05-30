@@ -1,4 +1,4 @@
-CIS 410 — Week 6 Code Package
+CIS 410 — Capstone Frontend
 
 Expected result after terraform apply
 
@@ -38,7 +38,7 @@ git add terraform/week6/main.tf
 git add terraform/week6/variables.tf
 git add terraform/week6/outputs.tf
 git add terraform/week6/.terraform.lock.hcl
-git commit -m "Week 6: GCS buckets — tfstate + logs"
+git commit -m "Week 1: GCS buckets — tfstate + logs"
 git push origin main
 ```
 
@@ -58,34 +58,20 @@ Runner IP: 192.168.1.131 #fake ip
 
 Pipeline status: [![Hello Pipeline](https://github.com/d33p-007/cis-410-cybersecurity-automation/actions/workflows/hello-pipeline.yml/badge.svg)](https://github.com/d33p-007/cis-410-cybersecurity-automation/actions/workflows/hello-pipeline.yml)
 
-## About Me
+## Company Name
 
-- **Name:** Pawan Mehra
+- **Name:** --
 
-- **GitHub Username:** d33p-007
+-
 
-- **Major:** Cybersecurity
+## App Description
 
-- **Semester:** Spring 2026
+This repository is Capstone
 
-## About This Course
+## Team Members & Roles
 
-This repository is my CIS 410: CyberSecurity Automation portfolio. In this course I will
+-
 
-learn about secure software development, CI/CD pipelines, containerization,
-
-infrastructure as code, and cloud deployment.
-
-## What I Hope to Learn
-
-- I hope to learn how to find security loophole , Securing digital assets, and dealing with the cyber threats
-
-- I hope to learn cybersecurity role within AI
-
-- I hope to learn how to defend digital assets using cybersecurity tools
-
-- I hope to learn automation in cybersecurity
+-
 
 ## Fun Fact
-
-Love to travel and party
