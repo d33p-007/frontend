@@ -20,11 +20,11 @@ env:
 
   REGISTRY: us-central1-docker.pkg.dev
 
-  REPO: cis410-app
+  REPO: cis410-capstone-app
 
   IMAGE: flask-app
 
-  SERVICE: cis410-flask-app
+  SERVICE: cis410-flask-capstone-app
 
 jobs:
   build-push-deploy:
