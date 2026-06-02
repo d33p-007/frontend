@@ -10,7 +10,7 @@
 
 # ─────────────────────────────────────────────────────────────────────────
 
-name: Deploy to Cloud Run
+name: Deploy to GCP
 
 on:
   workflow_dispatch: # manual trigger — intentional promotion gate
@@ -27,8 +27,8 @@ env:
   SERVICE: cis410-flask-app-capstone-frontend
 
 jobs:
-  # 1. BUILD STAGE
-  build:
+  # 1. BUILD and PUSH STAGE
+  build-push:
     runs-on: ubuntu-latest
     # REQUIRED: This permission allows requesting the OIDC JWT token
     permissions:
@@ -51,7 +51,7 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
 
-      # Build and tag with commit SHA — never :latest
+      # Build and tag image
       - name: Build and Tag Image
         run: |
 
@@ -64,15 +64,12 @@ jobs:
           docker tag ${IMAGE}:${{ github.sha }} ${IMAGE_PATH}
 
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
-
-  # 2. PUSH STAGE
-  push:
-    runs-on: ubuntu-latest
-    needs: build # Will not run if the Build stage fails
-    steps:
-      # Push Docker Image to GCP Artifact
-      - name: Push image
+      # Push image
+      - name: Push image to GCP Artifact
         run: |
+
           IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
+
           docker push ${IMAGE_PATH}
+
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
