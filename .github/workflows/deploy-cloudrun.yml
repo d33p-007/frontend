@@ -27,64 +27,81 @@ env:
   SERVICE: cis410-flask-app-capstone-frontend
 
 jobs:
-  build-push-deploy:
+  # 1. BUILD STAGE
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-
-      id-token: write # required for OIDC
-
     steps:
       - name: Checkout code
-
         uses: actions/checkout@v4
 
-      # OIDC replaces the SSH key secret from on-premise workflows
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
+      # Build and tag with commit SHA — never :latest
+      - name: Build image
+        run: |
+          PROJECT_ID=$(gcloud config get-value project)
+          IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
+          docker build -t ${IMAGE_PATH} .
+          echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
+
+  # 2. PUSH STAGE
+  push:
+    runs-on: ubuntu-latest
+    needs: build # Will not run if the Build stage fails
+    permissions:
+      contents: "read"
+      id-token: "write" # required for OIDC
+
+    steps:
+      # OIDC Authenticate
       - name: Authenticate to GCP via OIDC
-
+        id: auth
         uses: google-github-actions/auth@v2
-
         with:
+          token_format: "access_token"
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
-
           service_account: ${{ vars.SA_EMAIL }}
 
       - name: Set up Cloud SDK
-
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker for Artifact Registry
-
         run: gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
 
       # Build and tag with commit SHA — never :latest
-
-      - name: Build and push image
-
+      - name: Push image
         run: |
-
           PROJECT_ID=$(gcloud config get-value project)
-
           IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
-
-          docker build -t ${IMAGE_PATH} .
-
           docker push ${IMAGE_PATH}
-
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
 
-      # Deploy — mirrors "docker run" from on-premise weeks
+  # 3. DEPLOY STAGE
+  deploy:
+    runs-on: ubuntu-latest
+    needs: push # Ensures deployment only happens after a fresh image is pushed
+    permissions:
+      contents: "read"
+      id-token: "write" # required for OIDC
+
+    steps:
+      # OIDC Authenticate
+      - name: Authenticate to GCP via OIDC
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Deploy to Cloud Run
-
         run: |
-
           gcloud run deploy ${SERVICE} --image ${IMAGE_PATH} --region ${REGION} --platform managed --allow-unauthenticated --max-instances 3 --quiet
 
       - name: Print service URL
-
         run: |
-
           gcloud run services describe ${SERVICE} --region ${REGION} --format "value(status.url)"
