@@ -33,17 +33,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        # OIDC Authenticate
+      - name: Authenticate to GCP via OIDC
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
       # Build and tag with commit SHA — never :latest
-      - name: Build image
+      - name: Build and Tag Image
         run: |
+
           PROJECT_ID=$(gcloud config get-value project)
+
           IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
+
           docker build -t ${IMAGE}:${{ github.sha }} .
+
           docker tag ${IMAGE}:${{ github.sha }} ${IMAGE_PATH}
+
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
 
   # 2. PUSH STAGE
