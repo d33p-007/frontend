@@ -8,6 +8,18 @@ def home():
     # Renders the index.html file from the templates/ folder
     return render_template('index.html', title="Home Page", message="Welcome to my Flask App!")
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 # 2. REST API Route
 @app.route('/api/data', methods=['GET'])
 def get_data():
