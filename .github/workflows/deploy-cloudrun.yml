@@ -18,8 +18,6 @@ on:
 env:
   REGION: us-west1
 
-  #PROJECT_ID: cis-410-capstone # Replace with your GCP Project ID
-
   REGISTRY: us-west1-docker.pkg.dev
 
   REPO: cis410-capstone-app
@@ -51,6 +49,9 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth login --quiet
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
