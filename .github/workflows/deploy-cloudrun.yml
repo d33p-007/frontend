@@ -18,6 +18,8 @@ on:
 env:
   REGION: us-west1
 
+  PROJECT_ID: cis-410-capstone # Replace with your GCP Project ID
+
   REGISTRY: us-west1-docker.pkg.dev
 
   REPO: cis410-capstone-app
@@ -28,48 +30,50 @@ env:
 
 jobs:
   # 1. BUILD and PUSH STAGE
-  build-push:
+  build-and-push:
     runs-on: ubuntu-latest
     # REQUIRED: This permission allows requesting the OIDC JWT token
     permissions:
       contents: read
       id-token: write # required for OIDC
     steps:
+      # 1. Checkout repository source code
       - name: Checkout code
         uses: actions/checkout@v4
 
         # OIDC Authenticate
       - name: Authenticate to GCP via OIDC
+        id: auth
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.SA_EMAIL }}
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+      - name: Docker Auth
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGION }}-docker.pkg.dev
+          username: "oauth2accesstoken"
+          password: ${{ steps.auth.outputs.access_token }}
 
-      - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+      # 4. Build and Push container to Artifact Registry
+      - name: Build and Push Container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}:${{ github.sha }}
 
-      # Build and tag image
-      - name: Build and Tag Image
-        run: |
+      # 5. Deploy the image to Google Cloud Run
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}:${{ github.sha }}
 
-          PROJECT_ID=$(gcloud config get-value project)
-
-          IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
-
-          docker build -t ${IMAGE}:${{ github.sha }} .
-
-          docker tag ${IMAGE}:${{ github.sha }} ${IMAGE_PATH}
-
-          echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
-      # Push image
-      - name: Push image to GCP Artifact
-        run: |
-
-          IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
-
-          docker push ${IMAGE_PATH}
-
-          echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
+      # 6. Output the live URL for validation
+      - name: Show Live URL
+        run: echo "Application deployed successfully! URL is ${{ steps.deploy.outputs.url }}"
