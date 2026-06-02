@@ -42,7 +42,8 @@ jobs:
         run: |
           PROJECT_ID=$(gcloud config get-value project)
           IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
-          docker build -t ${IMAGE_PATH} .
+          docker build -t ${IMAGE}:${{ github.sha }} .
+          docker tag ${IMAGE} ${IMAGE_PATH}
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
 
   # 2. PUSH STAGE
