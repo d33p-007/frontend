@@ -76,4 +76,7 @@ jobs:
 
       # Output the live URL for validation
       - name: Show Live URL
-        run: echo "Application deployed successfully! URL is ${{ steps.deploy.outputs.url }}"
+        run: |
+
+          echo "Application deployed successfully! URL is - "
+          gcloud run services describe ${SERVICE} --region ${REGION} --format "value(status.url)"
