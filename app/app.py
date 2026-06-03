@@ -1,9 +1,18 @@
+import os
 from datetime import datetime
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
 
 app = Flask(__name__)
-app.secret_key = 'your_super_secret_session_key'
+
+# Cloud Run will inject these environment variables securely at runtime
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'local-fallback-key-for-dev')
+
+# Fallback to local SQLite if DATABASE_URL isn't injected yet
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 
+    'sqlite:///local_development.db'
+)
 
 # Serializer for generating secure, time-sensitive tokens
 def get_serializer():
