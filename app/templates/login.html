@@ -1,26 +1,34 @@
-{% extends "bootstrap/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends 'base.html' %}
 
-{% block title %}
-Login
-{% endblock %}
-
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
-{% endblock %}
+{% block title %}Sign In - WebApp{% endblock %}
 
 {% block content %}
-    <div class="container">
+<div class="auth-card">
+    <div class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Please enter your credentials to log in.</p>
+    </div>
 
-      <form class="form-signin" method="POST" action="/login">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        {{ form.hidden_tag() }}
-        {{ wtf.form_field(form.username) }}
-        {{ wtf.form_field(form.password) }}
-        {{ wtf.form_field(form.remember) }}
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
+    <form method="POST">
+        <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-input" placeholder="you@example.com" required>
+        </div>
 
-    </div> <!-- /container -->
+        <div class="form-group">
+            <div class="form-label-row">
+                <label class="form-label">Password</label>
+                <a href="#" class="text-link-xs">Forgot password?</a>
+            </div>
+            <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-primary-submit">Sign In</button>
+    </form>
+
+    <div class="auth-footer-link">
+        Don't have an account? 
+        <a href="{{ url_for('register') }}">Create an account</a>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account - WebApp{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Get started with our basic web application dashboard tools today.</p>
+    </div>
+
+    <form method="POST">
+        <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-input" placeholder="Full Name" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-input" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+        </div>
+
+        <div class="form-checkbox-wrapper">
+            <input type="checkbox" id="agree-terms" class="form-checkbox" required>
+            <label for="agree-terms" class="checkbox-label">
+                I accept the shared platform <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> document rules.
+            </label>
+        </div>
+
+        <button type="submit" class="btn-primary-submit">Register Account</button>
+    </form>
+
+    <div class="auth-footer-link">
+        Already have an account? 
+        <a href="{{ url_for('login') }}">Sign in here</a>
+    </div>
+</div>
+{% endblock %}
