@@ -25,7 +25,7 @@ resource "google_compute_network" "vpc" {
   auto_create_subnetworks = false
   project                 = var.project_id
 
-  description = "CIS 410 course VPC — managed by Terraform Week 7"
+  description = "CIS 410 course VPC"
 }
 
 
@@ -44,7 +44,7 @@ resource "google_compute_subnetwork" "public" {
   network       = google_compute_network.vpc.id
   project       = var.project_id
 
-  description = "Application workload subnet — used by Cloud Run in Week 8"
+  description = "Application workload subnet"
 }
 
 
