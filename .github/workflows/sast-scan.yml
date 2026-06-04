@@ -23,7 +23,7 @@ env:
   PROJECT_ID: cis-410-capstone
 
 jobs:
-  # ── Job 1: SAST — source code analysis ─────────────────────────────────────
+  # ── Job 1: SAST — source code analysis
   snyk-scan:
     name: "Snyk Code (SAST)"
     runs-on: ubuntu-latest
