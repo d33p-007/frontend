@@ -2,7 +2,6 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Terraform Plan workflow — Week 7
 #
-# Triggers on every push that changes files in terraform/week7/.
 # Authenticates to GCP via OIDC — no service account key is stored anywhere.
 #
 # What this workflow does:
@@ -17,7 +16,7 @@
 # Automated apply (with -auto-approve) is introduced in Week 8.
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: Terraform Plan
+name: TF Infra Automation
 
 on:
   push:
