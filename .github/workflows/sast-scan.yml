@@ -11,7 +11,7 @@
 #   SNYK_TOKEN      — app.snyk.io → Account Settings → Auth Token
 # ─────────────────────────────────────────────────────────────────────────
 
-name: "Snyk SAST/(SCA - Dependencies)/Container"
+name: "Snyk SAST/SCA/Container"
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ env:
 jobs:
   # ── Job 1: SAST — source code analysis
   snyk-scan:
-    name: "Snyk SAST/(SCA - Dependencies)/Container"
+    name: "Snyk SAST/SCA/Container"
     runs-on: ubuntu-latest
 
     steps:
