@@ -1,0 +1,71 @@
+# .github/workflows/terraform-plan.yml
+
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    name: Plan VPC Infrastructure
+
+    # ── OIDC Permissions
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      # ── Step 1: Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: OIDC Authentication
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
+
+      # ── Step 3: Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.0
+
+      # ── Step 4: Terraform Init
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform/infrastructure
+
+      # ── Step 5: Terraform Validate
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: terraform/infrastructure
+
+      # ── Step 6: Check formatting
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check
+        working-directory: terraform/infrastructure
+
+      # ── Step 7: Terraform Plan
+      - name: Terraform Plan
+        id: plan
+        working-directory: terraform/infrastructure
+        continue-on-error: true
+        env:
+          TF_VAR_project_id: ${{ vars.TF_VAR_PROJECT_ID }}
+          TF_VAR_my_ip_cidr: ${{ vars.TF_VAR_MY_IP_CIDR }}
+        run: terraform plan -no-color
+
+      # ── Step 8: Fail the build if the plan failed
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
