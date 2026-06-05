@@ -9,9 +9,9 @@
 #
 # REQUIRED SECRETS:
 #   SNYK_TOKEN      — app.snyk.io → Account Settings → Auth Token
-# ─────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────────
 
-name: "SAST Scan"
+name: "Snyk SAST/SCA/Container"
 
 on:
   pull_request:
@@ -22,10 +22,16 @@ permissions:
 env:
   PROJECT_ID: cis-410-capstone
 
+  REGISTRY: us-west1-docker.pkg.dev
+
+  REPO: cis410-capstone-app
+
+  IMAGE: flask-app-frontend
+
 jobs:
-  # ── Job 1: SAST — source code analysis ─────────────────────────────────────
+  # ── Job 1: SAST — source code analysis
   snyk-scan:
-    name: "Snyk Code (SAST)"
+    name: "Snyk SAST/SCA/Container"
     runs-on: ubuntu-latest
 
     steps:
@@ -41,21 +47,61 @@ jobs:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.SA_EMAIL }}
 
-      # Step 2: Fetch Snyk API Token from GCP Secret Manager
-      - name: Fetch Snyk Token
+      # Retrieve the secret values from Secret Manager
+      - name: Fetch Synk Secrets
         id: secrets
         uses: google-github-actions/get-secretmanager-secrets@v2
         with:
           secrets: |-
-            SNYK_TOKEN:projects/${PROJECT_ID}/secrets/Snyk_Capstone_GCP/versions/latest
+            SNYK_TOKEN:${{ env.PROJECT_ID }}/Snyk_Capstone_GCP
 
       # Step 3: Set up Snyk CLI environment
       - name: Setup Snyk CLI
         uses: snyk/actions/setup@master
 
       # Step 4: Run SAST (Static Application Security Testing / Snyk Code)
-      - name: Snyk Code Test (SAST)
+      - name: Snyk (SAST) Test
         run: snyk code test --sarif-file-output=snyk-code.sarif
         env:
           SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
         continue-on-error: true
+
+      # Step 5: Run SCA (Software Composition Analysis / Open Source Dependencies)
+      - name: Snyk (SCA - Dependencies) Test
+        run: snyk test --sarif-file-output=snyk-sca.sarif
+        env:
+          SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
+        continue-on-error: true
+
+      # Build container
+      - name: Build Container
+        run: |
+
+          IMAGE_PATH=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
+
+          docker build -t ${IMAGE_PATH} .
+
+      - name: Snyk Container Test
+        run: snyk container test ${IMAGE_PATH} --sarif-file-output=snyk-container.sarif
+        env:
+          SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
+        continue-on-error: true
+
+      # Step 7: Upload ALL results to GitHub Security tab
+      #- name: Upload SAST results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-code.sarif
+      #    category: snyk-code
+
+      # - name: Upload SCA results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-sca.sarif
+      #    category: snyk-sca
+
+      # - name: Upload Container results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-container.sarif
+      #    category: snyk-container
