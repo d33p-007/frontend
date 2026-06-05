@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Activation Status{% endblock %}
+
+{% block content %}
+<div class="notice-card">
+    {% if success %}
+        <!-- Success Content Block -->
+        <div class="icon-wrapper-email" style="background-color: #d1e7dd; color: #0f5132;">✓</div>
+        <h1 class="page-title">Account Verified!</h1>
+        <p class="page-subtitle">Thank you, <strong>{{ session['username'] }}</strong>! Your email credentials have been confirmed, and your system dashboard is fully unlocked.</p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('welcome') }}" class="btn-primary-submit" style="text-decoration: none; display: inline-block;">Go to Dashboard →</a>
+        </div>
+    {% else %}
+        <!-- Token Error Content Block -->
+        <div class="icon-wrapper-email" style="background-color: #f8d7da; color: #842029;">✕</div>
+        <h1 class="page-title">Activation Failed</h1>
+        
+        <div class="alert-error-box">
+            <strong>Error Processing Payload:</strong> {{ error }}
+        </div>
+        
+        <p class="page-subtitle">Verification payloads expire quickly for defense protocol coverage. Please retry registration setup to generate a fresh link.</p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('register') }}" class="btn-primary-submit" style="text-decoration: none; display: inline-block; background-color: #6c757d;">Back to Registration</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

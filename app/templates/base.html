@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PureVide Wellness{% endblock %}</title>
+    <!-- Link to the custom external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Common Header / Navigation Bar -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="{{ url_for('home') }}">PureVide Wellness</a>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                {% if 'user_id' in session %}
+        <span class="text-sm text-slate-600 font-medium hidden sm:inline">
+            Welcome, <strong class="text-slate-900">{{ session['username'] }}</strong>
+        </span>
+        <a href="{{ url_for('logout') }}" 
+           class="text-sm font-medium text-slate-600 hover:text-red-600 bg-slate-100 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors duration-200">
+            Log Out
+        </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" 
+              class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors duration-200">
+                Sign In
+            </a>
+            <a href="{{ url_for('register') }}" 
+              class="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-sm transition-colors duration-200">
+                Get Started
+            </a>
+        {% endif %}
+                <a href="{{ url_for('features') }}">Features</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content-wrapper">
+        {% block content %}
+        <!-- Child pages inject content here -->
+        {% endblock %}
+    </main>
+
+    <!-- Common Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>&copy; {{ current_year }} WebApp Inc. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+                <a href="{{ url_for('terms') }}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

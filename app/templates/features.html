@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Features - PremiumApp{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="text-center max-w-2xl mx-auto">
+        <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl">Application Features</h1>
+        <p class="mt-4 text-lg text-slate-600">Everything you need to ship your digital products quickly and beautifully.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <!-- Feature 1 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-transform hover:-translate-y-1 duration-200">
+            <div class="w-10 h-10 bg-blue-100 text-blue-600 flex items-center justify-center rounded-lg font-bold text-lg mb-4">⚡</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Blazing Fast</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">Engineered using Python Flask and optimized utility styling routines for high-speed client rendering.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-transform hover:-translate-y-1 duration-200">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 flex items-center justify-center rounded-lg font-bold text-lg mb-4">🔒</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Secure Contexts</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">Built-in session handlers protect access routing states automatically based on authentication logic.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-transform hover:-translate-y-1 duration-200">
+            <div class="w-10 h-10 bg-purple-100 text-purple-600 flex items-center justify-center rounded-lg font-bold text-lg mb-4">📱</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Fluid Responsiveness</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">Layout grids smoothly reflow content to adapt flawlessly to phone, tablet, and desktop viewing viewports.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Email - WebApp{% endblock %}
+
+{% block content %}
+<div class="notice-card">
+    <div class="icon-wrapper-email">✉</div>
+    
+    <h1 class="page-title">Check your inbox</h1>
+    <p class="page-subtitle">We have dispatched an verification link to your active coordinates at:</p>
+    
+    <p style="margin: 1.5rem 0;"><span class="email-highlight">{{ email }}</span></p>
+    
+    <p class="page-subtitle">Click the authorization route enclosed inside that validation payload to initialize your system configurations.</p>
+    
+    <p class="hint-text">
+        Can't find the email? Check your spam folder or wait a few minutes. 
+        <br><a href="{{ url_for('register') }}" style="color: #0d6efd; text-decoration: none; font-weight: 600;">Click here to re-register</a> if you entered a wrong email.
+    </p>
+</div>
+{% endblock %}

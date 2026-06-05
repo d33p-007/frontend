@@ -9,43 +9,42 @@ on:
   push:
     branches:
       - main
-  
 
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
     name: Plan VPC Infrastructure
 
-    # ── OIDC Permissions 
+    # ── OIDC Permissions
     permissions:
       id-token: write
       contents: read
 
     steps:
-      # ── Step 1: Checkout 
+      # ── Step 1: Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ── Step 2: OIDC Authentication 
+      # ── Step 2: OIDC Authentication
 
-      - name: Authenticate to GCP 
+      - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.SA_EMAIL }}
 
-      # ── Step 3: Setup Terraform 
+      # ── Step 3: Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.0
 
-      # ── Step 4: Terraform Init 
+      # ── Step 4: Terraform Init
       - name: Terraform Init
         run: terraform init
         working-directory: terraform/infrastructure
 
-      # ── Step 5: Terraform Validate 
+      # ── Step 5: Terraform Validate
       - name: Terraform Validate
         run: terraform validate
         working-directory: terraform/infrastructure
@@ -56,10 +55,10 @@ jobs:
         run: terraform fmt -check
         working-directory: terraform/infrastructure
 
-      # ── Step 7: Terraform Plan 
+      # ── Step 7: Terraform Plan
       - name: Terraform Plan
         id: plan
-        working-directory: terraform/infrastructure 
+        working-directory: terraform/infrastructure
         continue-on-error: true
         env:
           TF_VAR_project_id: ${{ vars.TF_VAR_PROJECT_ID }}
