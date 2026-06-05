@@ -44,7 +44,7 @@ terraform {
       # This prevents breaking changes from major version upgrades.
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "~> 3.0"
     }
   }
@@ -82,9 +82,9 @@ module "networking" {
 
   project_id  = var.project_id
   region      = var.region
-  vpc_name    = "cis410-capstone-vpc"   # VPC will be named "cis410-vpc" in GCP
-  subnet_cidr = "10.0.1.0/24"  # 256 addresses for application workloads
-  my_ip_cidr  = var.my_ip_cidr # your IP — set in terraform.tfvars
+  vpc_name    = "cis410-capstone-vpc" # VPC will be named "cis410-vpc" in GCP
+  subnet_cidr = "10.0.1.0/24"         # 256 addresses for application workloads
+  my_ip_cidr  = var.my_ip_cidr        # your IP — set in terraform.tfvars
 }
 
 # Automatically enable the Service Networking API inside the project

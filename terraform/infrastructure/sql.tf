@@ -27,14 +27,14 @@ resource "google_sql_database_instance" "postgres_instance" {
   database_version = "POSTGRES_15"
   region           = var.region
 
-  
+
   depends_on = [google_service_networking_connection.private_vpc_connection]
 
   settings {
-    tier = "db-f1-micro" 
+    tier = "db-f1-micro"
 
     ip_configuration {
-      ipv4_enabled    = false 
+      ipv4_enabled    = false
       private_network = "projects/${var.project_id}/global/networks/${module.networking.vpc_name}"
     }
   }
@@ -50,5 +50,5 @@ resource "google_sql_database" "app_db" {
 resource "google_sql_user" "db_user" {
   name     = "app_user"
   instance = google_sql_database_instance.postgres_instance.name
-  password = google_secret_manager_secret_version.db_password_version.secret_data 
+  password = google_secret_manager_secret_version.db_password_version.secret_data
 }
