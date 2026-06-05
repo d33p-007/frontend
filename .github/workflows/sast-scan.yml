@@ -9,9 +9,9 @@
 #
 # REQUIRED SECRETS:
 #   SNYK_TOKEN      — app.snyk.io → Account Settings → Auth Token
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────
 
-name: "SAST Scan"
+name: "Snyk SAST/(SCA - Dependencies)/Container"
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ env:
 jobs:
   # ── Job 1: SAST — source code analysis
   snyk-scan:
-    name: "Snyk Code (SAST)"
+    name: "Snyk SAST/(SCA - Dependencies)/Container"
     runs-on: ubuntu-latest
 
     steps:
@@ -60,14 +60,14 @@ jobs:
         uses: snyk/actions/setup@master
 
       # Step 4: Run SAST (Static Application Security Testing / Snyk Code)
-      - name: Snyk Code Test (SAST)
+      - name: Snyk (SAST) Test
         run: snyk code test --sarif-file-output=snyk-code.sarif
         env:
           SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
         continue-on-error: true
 
       # Step 5: Run SCA (Software Composition Analysis / Open Source Dependencies)
-      - name: Snyk Open Source Test (SCA)
+      - name: Snyk (SCA - Dependencies) Test
         run: snyk test --sarif-file-output=snyk-sca.sarif
         env:
           SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
