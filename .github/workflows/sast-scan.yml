@@ -22,6 +22,12 @@ permissions:
 env:
   PROJECT_ID: cis-410-capstone
 
+  REGISTRY: us-west1-docker.pkg.dev
+
+  REPO: cis410-capstone-app
+
+  IMAGE: flask-app-frontend
+
 jobs:
   # ── Job 1: SAST — source code analysis
   snyk-scan:
@@ -59,3 +65,43 @@ jobs:
         env:
           SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
         continue-on-error: true
+
+      # Step 5: Run SCA (Software Composition Analysis / Open Source Dependencies)
+      - name: Snyk Open Source Test (SCA)
+        run: snyk test --sarif-file-output=snyk-sca.sarif
+        env:
+          SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
+        continue-on-error: true
+
+      # Build container
+      - name: Build Container
+        run: |
+
+          IMAGE_PATH=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.IMAGE }}:${{ github.sha }}
+
+          docker build -t ${IMAGE_PATH} .
+
+      - name: Snyk Container Test
+        run: snyk container test ${IMAGE_PATH} --sarif-file-output=snyk-container.sarif
+        env:
+          SNYK_TOKEN: ${{ steps.secrets.outputs.SNYK_TOKEN }}
+        continue-on-error: true
+
+      # Step 7: Upload ALL results to GitHub Security tab
+      - name: Upload SAST results to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-code.sarif
+          category: snyk-code
+
+      - name: Upload SCA results to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-sca.sarif
+          category: snyk-sca
+
+      - name: Upload Container results to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-container.sarif
+          category: snyk-container
