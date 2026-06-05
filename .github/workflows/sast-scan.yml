@@ -88,20 +88,20 @@ jobs:
         continue-on-error: true
 
       # Step 7: Upload ALL results to GitHub Security tab
-      - name: Upload SAST results to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-code.sarif
-          category: snyk-code
+      #- name: Upload SAST results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-code.sarif
+      #    category: snyk-code
 
-      - name: Upload SCA results to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-sca.sarif
-          category: snyk-sca
+      # - name: Upload SCA results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-sca.sarif
+      #    category: snyk-sca
 
-      - name: Upload Container results to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-container.sarif
-          category: snyk-container
+      # - name: Upload Container results to GitHub Code Scanning
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    sarif_file: snyk-container.sarif
+      #    category: snyk-container
