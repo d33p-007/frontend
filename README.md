@@ -60,16 +60,22 @@ Pipeline status: [![Hello Pipeline](https://github.com/d33p-007/cis-410-cybersec
 
 ## Company Name
 
-- **Name:** --
-
--
+- PureVibe Wellness --
 
 ## App Description
 
-This repository is Capstone
+#-- Users can register/log in and create their profile. They can look for a healthy diet plan for themselves and their family members. Users can also learn about fitness exercises they can do at home, such as yoga or stretching.
+
 
 ## Team Members & Roles
 
--
-
--
+-#-- Project Lead - Pawan Mehra
+GitHub Username: d33p-007
+#-- Backend Engineer - Tre Crowley
+GitHub Username: trecrowley
+#-- Frontend Engineer - Ruweda Hassan
+GitHub Username: Ruru489
+#-- DevSecOps Engineer - Seth Richardson
+GitHub Username: Srichardson00
+#-- Security Reviewer - Wesley Ngem
+GitHub Username: cyberwes69
