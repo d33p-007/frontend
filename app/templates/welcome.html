@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Account Activation Status{% endblock %}
+{% block title %}Welcome to PureVibe Wellness!{% endblock %}
 
 {% block content %}
 <div class="notice-card">
@@ -8,21 +8,21 @@
         <!-- Success Content Block -->
         <div class="icon-wrapper-email" style="background-color: #d1e7dd; color: #0f5132;">✓</div>
         <h1 class="page-title">Account Verified!</h1>
-        <p class="page-subtitle">Thank you, <strong>{{ session['username'] }}</strong>! Your email credentials have been confirmed, and your system dashboard is fully unlocked.</p>
+        <p class="page-subtitle">Thank you, <strong>{{ session['username'] }}</strong>! Your email has been varified and your account is now active.</p>
         
         <div style="margin-top: 2rem;">
-            <a href="{{ url_for('welcome') }}" class="btn-primary-submit" style="text-decoration: none; display: inline-block;">Go to Dashboard →</a>
+            <a href="{{ url_for('welcome') }}" class="btn-primary-submit" style="text-decoration: none; display: inline-block;">Continue to dashboard →</a>
         </div>
     {% else %}
         <!-- Token Error Content Block -->
         <div class="icon-wrapper-email" style="background-color: #f8d7da; color: #842029;">✕</div>
-        <h1 class="page-title">Activation Failed</h1>
+        <h1 class="page-title">Verification Failed</h1>
         
         <div class="alert-error-box">
-            <strong>Error Processing Payload:</strong> {{ error }}
+            <strong>Verification Error:</strong> {{ error }}
         </div>
         
-        <p class="page-subtitle">Verification payloads expire quickly for defense protocol coverage. Please retry registration setup to generate a fresh link.</p>
+        <p class="page-subtitle">Your verification link may have expired or is no longer valid. Please register again to receive a new verification email.</p>
         
         <div style="margin-top: 2rem;">
             <a href="{{ url_for('register') }}" class="btn-primary-submit" style="text-decoration: none; display: inline-block; background-color: #6c757d;">Back to Registration</a>

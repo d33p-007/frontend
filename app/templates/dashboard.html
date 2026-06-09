@@ -4,19 +4,19 @@
 
 {% block content %}
 <div class="dashboard-hero">
-    <h2>Welcome to your Workspace, {{ session['username'] }}!</h2>
-    <p>Operational summary logs for your deployment cluster parameters.</p>
+    <h2>Welcome Back {{ session['username'] }}!</h2>
+    <p>Track your wellness activity, goals, and personalized recommendations.</p>
 </div>
 
 <!-- Row of Analytical Cards -->
 <div class="metrics-row">
     <div class="metric-card">
-        <div class="label">Total API Calls</div>
+        <div class="label">Wellness Plans</div>
         <div class="value">42,891</div>
         <div class="trend-positive">▲ +12.4% this week</div>
     </div>
     <div class="metric-card">
-        <div class="label">Connected Nodes</div>
+        <div class="label">Fitness Programs</div>
         <div class="value">8 / 10</div>
         <div class="trend-positive" style="color: #6c757d;">● System Nominal</div>
     </div>
@@ -32,13 +32,13 @@
     
     <!-- Left Column: Primary Tracking Table -->
     <div class="workspace-card">
-        <h3>Active Deployment Packages</h3>
+        <h3>Recommended wellness Plans</h3>
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Package ID</th>
-                    <th>Runtime Engine</th>
-                    <th>Date Modified</th>
+                    <th>Program</th>
+                    <th>Category</th>
+                    <th>Updated</th>
                     <th>Status</th>
                 </tr>
             </thead>
